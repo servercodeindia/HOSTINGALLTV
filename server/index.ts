@@ -3,7 +3,6 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createServer } from "http";
-import { registerRoutes } from "./routes";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,23 +11,38 @@ const app = express();
 const server = createServer(app);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
-registerRoutes(server, app);
+// ---- API example ----
+app.get("/api/health", (_req, res) => {
+  res.json({ ok: true });
+});
 
-// Serve frontend in production
-if (process.env.NODE_ENV === "production") {
-  const clientPath = path.join(__dirname, "client");
+const isProd = process.env.NODE_ENV === "production";
 
-  app.use(express.static(clientPath));
+if (!isProd) {
+  // DEV: mount Vite
+  const { createServer: createViteServer } = await import("vite");
 
-  app.get("*", (_, res) => {
-    res.sendFile(path.join(clientPath, "index.html"));
+  const vite = await createViteServer({
+    root: path.resolve(__dirname, "../client"),
+    server: { middlewareMode: true },
+    appType: "custom"
+  });
+
+  app.use(vite.middlewares);
+} else {
+  // PROD: serve built files
+  const clientDist = path.resolve(__dirname, "../client/dist");
+  app.use(express.static(clientDist));
+
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientDist, "index.html"));
   });
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`[express] serving on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
