@@ -1,11 +1,9 @@
 services:
-  - type: web
-    name: rest-express
-    env: node
-    plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    autoDeploy: true
-    envVars:
-      - key: NODE_ENV
-        value: production
+- type: web
+  name: my-app
+  runtime: node
+  buildCommand: npm install && npx expo export --platform web && npm run server:build
+  startCommand: npm run server:prod
+  envVars:
+    - key: NODE_ENV
+      value: production
