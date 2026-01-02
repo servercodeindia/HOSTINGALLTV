@@ -1,6 +1,7 @@
 {
   "name": "rest-express",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -9,31 +10,52 @@
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "npx vite build",
-    "build:server": "esbuild server/index.ts --platform=node --bundle --format=esm --outfile=dist/index.js --external:dotenv/config --external:lightningcss",
+    "build:server": "esbuild server/index.ts --platform=node --bundle --format=esm --external:dotenv/config --outfile=dist/index.js",
     "start": "node dist/index.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "dotenv": "^17.2.3",
     "pg": "^8.11.5",
-    "drizzle-orm": "^0.30.10",
-    "drizzle-zod": "^0.5.1",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.36.3",
+    "drizzle-zod": "^0.6.1",
+    "zod": "^3.23.8",
 
     "react": "18.2.0",
     "react-dom": "18.2.0",
-
     "wouter": "^3.3.5",
-    "lucide-react": "0.395.0"
+    "@tanstack/react-query": "^5.66.0",
+    "lucide-react": "^0.395.0",
+    "framer-motion": "^11.0.0",
+    "video.js": "^8.10.0",
+
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "@radix-ui/react-toast": "^1.2.4",
+    "@radix-ui/react-checkbox": "^1.1.2",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.1",
+
+    "react-hook-form": "^7.51.4",
+    "@hookform/resolvers": "^3.3.4",
+
+    "clsx": "^2.1.1",
+    "class-variance-authority": "^0.7.0",
+    "tailwind-merge": "^2.5.4",
+    "embla-carousel-react": "^8.5.1",
+    "embla-carousel-autoplay": "^8.5.1"
   },
   "devDependencies": {
     "vite": "^7.3.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "typescript": "^5.4.5",
-    "tsx": "^4.19.2",
-    "esbuild": "^0.25.0",
+
     "tailwindcss": "^3.4.17",
-    "postcss": "^8.4.49",
+    "postcss": "^8.4.47",
     "autoprefixer": "^10.4.20",
+
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.2",
+    "esbuild": "^0.24.0",
     "cross-env": "^7.0.3"
   }
 }
