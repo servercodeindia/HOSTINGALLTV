@@ -1,7 +1,6 @@
-import type { Config } from "tailwindcss";
-
+/** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./client/**/*.{ts,tsx,js,jsx}"],
+  content: ["./client/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -41,4 +40,4 @@ export default {
     }
   },
   plugins: []
-} satisfies Config;
+};
