@@ -1,82 +1,34 @@
-import express, { type Request, Response, NextFunction } from "express";
+import "dotenv/config";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import { createServer } from "http";
 import { registerRoutes } from "./routes";
-import { serveStatic } from "./static";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const httpServer = createServer(app);
+const server = createServer(app);
 
-// ---- RAW BODY SUPPORT ----
-declare module "http" {
-  interface IncomingMessage {
-    rawBody: unknown;
-  }
-}
-
-app.use(
-  express.json({
-    verify: (req, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
-
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ---- LOGGER ----
-export function log(message: string, source = "express") {
-  const time = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
+registerRoutes(server, app);
+
+// Serve frontend in production
+if (process.env.NODE_ENV === "production") {
+  const clientPath = path.join(__dirname, "client");
+
+  app.use(express.static(clientPath));
+
+  app.get("*", (_, res) => {
+    res.sendFile(path.join(clientPath, "index.html"));
   });
-  console.log(`${time} [${source}] ${message}`);
 }
 
-// ---- REQUEST LOGGING ----
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let captured: any;
+const PORT = process.env.PORT || 5000;
 
-  const originalJson = res.json.bind(res);
-  res.json = (body: any) => {
-    captured = body;
-    return originalJson(body);
-  };
-
-  res.on("finish", () => {
-    if (path.startsWith("/api")) {
-      const ms = Date.now() - start;
-      log(`${req.method} ${path} ${res.statusCode} ${ms}ms`);
-    }
-  });
-
-  next();
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`[express] serving on port ${PORT}`);
 });
-
-// ---- BOOTSTRAP ----
-(async () => {
-  await registerRoutes(httpServer, app);
-
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || 500;
-    res.status(status).json({ message: err.message || "Server error" });
-    console.error(err);
-  });
-
-  // DEV = Vite | PROD = static
-  if (process.env.NODE_ENV === "production") {
-    serveStatic(app);
-  } else {
-    const { setupVite } = await import("./vite");
-    await setupVite(httpServer, app);
-  }
-
-  // ---- WINDOWS-SAFE LISTEN ----
-  const port = Number(process.env.PORT || 5000);
-  httpServer.listen(port, () => {
-    log(`serving on port ${port}`);
-  });
-})();
