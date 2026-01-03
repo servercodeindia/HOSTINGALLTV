@@ -2,47 +2,39 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { createServer } from "http";
 
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+// Needed for __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-const server = createServer(app);
-
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ---- API example ----
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true });
-});
+// --------------------
+// API ROUTES GO HERE
+// app.use("/api", apiRouter);
+// --------------------
 
-const isProd = process.env.NODE_ENV === "production";
+/**
+ * PRODUCTION: serve Vite build
+ * IMPORTANT:
+ * Vite builds to: dist/client
+ * NOT client/dist
+ */
+if (process.env.NODE_ENV === "production") {
+  const clientDistPath = path.join(__dirname, "..", "dist", "client");
 
-if (!isProd) {
-  // DEV: mount Vite
-  const { createServer: createViteServer } = await import("vite");
-
-  const vite = await createViteServer({
-    root: path.resolve(__dirname, "../client"),
-    server: { middlewareMode: true },
-    appType: "custom"
-  });
-
-  app.use(vite.middlewares);
-} else {
-  // PROD: serve built files
-  const clientDist = path.resolve(__dirname, "../client/dist");
-  app.use(express.static(clientDist));
+  app.use(express.static(clientDistPath));
 
   app.get("*", (_req, res) => {
-    res.sendFile(path.join(clientDist, "index.html"));
+    res.sendFile(path.join(clientDistPath, "index.html"));
   });
 }
 
-const PORT = Number(process.env.PORT) || 5000;
-
-server.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
