@@ -1,29 +1,60 @@
-"dependencies": {
-  "react": "18.2.0",
-  "react-dom": "18.2.0",
+{
+  "name": "rest-express",
+  "version": "1.0.0",
+  "private": true,
 
-  "wouter": "^3.3.5",
-  "@tanstack/react-query": "^5.62.0",
-  "react-hook-form": "^7.54.2",
+  "type": "module",
 
-  "lucide-react": "^0.469.0",
-  "framer-motion": "^11.15.0",
+  "engines": {
+    "node": ">=22"
+  },
 
-  "@radix-ui/react-tooltip": "^1.1.6",
-  "@radix-ui/react-dialog": "^1.1.6",
-  "@radix-ui/react-slot": "^1.1.2",
+  "scripts": {
+    "dev": "NODE_ENV=development tsx server/index.ts",
+    "build": "npm run build:client",
+    "build:client": "vite build",
+    "start": "NODE_ENV=production node server/index.ts"
+  },
 
-  "embla-carousel-react": "^8.5.1",
-  "embla-carousel-autoplay": "^8.5.1",
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
 
-  "video.js": "^8.19.2",
+    "wouter": "^3.3.5",
+    "@tanstack/react-query": "^5.62.0",
+    "react-hook-form": "^7.54.2",
 
-  "express": "^4.21.2",
-  "cors": "^2.8.5",
-  "dotenv": "^16.4.5",
+    "lucide-react": "^0.469.0",
+    "framer-motion": "^11.15.0",
 
-  "pg": "^8.11.5",
-  "drizzle-orm": "^0.30.10",
-  "drizzle-zod": "^0.5.1",
-  "zod": "^3.23.8"
+    "@radix-ui/react-tooltip": "^1.1.6",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
+
+    "embla-carousel-react": "^8.5.1",
+    "embla-carousel-autoplay": "^8.5.1",
+
+    "video.js": "^8.19.2",
+
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+
+    "pg": "^8.11.5",
+    "drizzle-orm": "^0.30.10",
+    "drizzle-zod": "^0.5.1",
+    "zod": "^3.23.8"
+  },
+
+  "devDependencies": {
+    "vite": "^7.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+
+    "typescript": "^5.4.5",
+    "tsx": "^4.19.2",
+
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.20"
+  }
 }
