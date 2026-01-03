@@ -10,12 +10,11 @@
     "dev": "vite",
     "build": "npm run build:client",
     "build:client": "vite build",
-    "start": "NODE_ENV=production node server/index.ts"
+    "start": "NODE_ENV=production node server/index.js"
   },
   "dependencies": {
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react/jsx-runtime": "18.2.0",
 
     "wouter": "^3.3.5",
     "@tanstack/react-query": "^5.59.20",
