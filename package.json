@@ -13,6 +13,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.16",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "pg": "^8.11.5",
