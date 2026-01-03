@@ -2,39 +2,44 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import { db } from "./db";
+import { movies } from "../shared/schema";
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+app.use(express.json());
 
-// Needed for __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+/* ---------------- API ---------------- */
 
-// --------------------
-// API ROUTES GO HERE
-// app.use("/api", apiRouter);
-// --------------------
+app.get("/api/health", async (_req, res) => {
+  try {
+    await db.select().from(movies).limit(1);
+    res.json({ ok: true, db: "connected" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: "DB failed" });
+  }
+});
 
-/**
- * PRODUCTION: serve Vite build
- * IMPORTANT:
- * Vite builds to: dist/client
- * NOT client/dist
- */
-if (process.env.NODE_ENV === "production") {
-  const clientDistPath = path.join(__dirname, "..", "dist", "client");
+app.get("/api/movies", async (_req, res) => {
+  const data = await db.select().from(movies);
+  res.json(data);
+});
 
-  app.use(express.static(clientDistPath));
+/* ---------------- CLIENT ---------------- */
 
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(clientDistPath, "index.html"));
-  });
-}
+const clientPath = path.join(__dirname, "..", "dist", "client");
+app.use(express.static(clientPath));
 
+app.get("*", (_req, res) => {
+  res.sendFile(path.join(clientPath, "index.html"));
+});
+
+/* ---------------- START ---------------- */
+
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
