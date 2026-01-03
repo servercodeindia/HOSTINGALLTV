@@ -3,64 +3,66 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+
   "engines": {
     "node": ">=22"
   },
+
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
 
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run build:client",
 
     "build:client": "npx vite build",
 
-    "build:server": "esbuild server/index.ts --platform=node --bundle --format=esm --external:dotenv/config --external:lightningcss --outfile=dist/index.js",
-
-    "start": "node dist/index.js"
+    "start": "NODE_ENV=production node server/index.ts"
   },
-  "dependencies": {
-    "express": "^4.19.2",
-    "pg": "^8.11.5",
-    "dotenv": "^17.2.3",
 
-    "drizzle-orm": "0.30.10",
-    "drizzle-zod": "0.5.1",
+  "dependencies": {
+    "express": "^4.21.2",
+    "dotenv": "^17.2.3",
+    "pg": "^8.11.5",
+    "drizzle-orm": "^0.36.4",
+    "drizzle-zod": "^0.5.1",
     "zod": "^3.23.8",
 
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "wouter": "^3.3.5",
-    "@tanstack/react-query": "^5.66.0",
+    "@tanstack/react-query": "^5.56.2",
     "lucide-react": "0.395.0",
-    "framer-motion": "^11.0.0",
-    "video.js": "^8.10.0",
 
-    "@radix-ui/react-dialog": "^1.0.5",
-    "@radix-ui/react-tooltip": "^1.0.7",
-    "@radix-ui/react-toast": "^1.2.4",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.4",
+    "@radix-ui/react-toast": "^1.2.2",
     "@radix-ui/react-checkbox": "^1.1.2",
-    "@radix-ui/react-label": "^2.1.1",
-    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
 
-    "react-hook-form": "^7.51.4",
-    "@hookform/resolvers": "^3.3.4",
+    "react-hook-form": "^7.53.2",
+    "@hookform/resolvers": "^3.9.1",
 
     "clsx": "^2.1.1",
-    "class-variance-authority": "^0.7.0",
     "tailwind-merge": "^2.5.4",
+    "class-variance-authority": "^0.7.0",
+
+    "framer-motion": "^11.11.7",
     "embla-carousel-react": "^8.5.1",
-    "embla-carousel-autoplay": "^8.5.1"
+    "embla-carousel-autoplay": "^8.5.1",
+    "video.js": "^8.17.4"
   },
+
   "devDependencies": {
+    "tsx": "^4.19.2",
+    "cross-env": "^7.0.3",
+
     "vite": "^7.3.0",
     "@vitejs/plugin-react": "^4.3.4",
 
     "tailwindcss": "^3.4.17",
-    "postcss": "^8.4.47",
+    "postcss": "^8.4.49",
     "autoprefixer": "^10.4.20",
 
-    "typescript": "^5.6.3",
-    "tsx": "^4.19.2",
-    "esbuild": "^0.24.0",
-    "cross-env": "^7.0.3"
+    "typescript": "^5.6.3"
   }
 }
